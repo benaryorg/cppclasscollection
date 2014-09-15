@@ -42,7 +42,7 @@ bool Thread::stop(void)
 	}
 	else
 	{
-		bool ok=!pthread_kill(this->thread,SIGKILL);
+		bool ok=!pthread_kill(this->thread,SIGQUIT);
 		if(ok)
 		{
 			this->running=false;
