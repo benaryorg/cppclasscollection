@@ -3,3 +3,4 @@ build
 *.swp
 *.tmp
 *.local
+*.exe
