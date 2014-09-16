@@ -1,12 +1,30 @@
-#include "thread.h"#if defined(linux)||defined(__linux)||defined(__linux__)#define _linux#elif defined(WIN32)||defined(_WIN32)||defined(__WIN32)||defined(__WIN32__)#define _win32#endif
+#include "thread.h"
+
+#if defined(linux)||defined(__linux)||defined(__linux__)
+#define _linux
+#elif defined(WIN32)||defined(_WIN32)||defined(__WIN32)||defined(__WIN32__)
+#define _win32
+#endif
+
+
 #if defined(_linux)
 #include <pthread.h>
+#include <signal.h>
 #elif defined(_win32)
-#include <windows.h>#else#error undefined platform
+#include <windows.h>
+#else
+#error undefined platform
 #endif
-#include <signal.h>
+
 using namespace cppbenaryorg;
-#ifdef _win32DWORD WINAPI *windows_helper_function(LPVOID arg){	Thread *thread=reinterpret_cast<Thread *>(arg);	return (DWORD *)thread->call();}#endif /**_win32**/
+
+#ifdef _win32
+DWORD WINAPI *windows_helper_function(LPVOID arg)
+{
+	Thread *thread=reinterpret_cast<Thread *>(arg);
+	return (DWORD *)thread->call();
+}
+#endif /**_win32**/
 
 Thread::Thread(void *(*f)(void *),void *arg)
 {
@@ -23,7 +41,8 @@ void *Thread::call(void)
 		return this->getFunction()(this->getArgument());
 	}
 	else
-	{		this->running=false;
+	{
+		this->running=false;
 		return 0;
 	}
 }
@@ -36,7 +55,8 @@ bool Thread::start(void)
 	}
 #if defined(_linux)
 	this->running=!pthread_create(&this->thread,NULL,this->getFunction(),this->getArgument());
-#elif defined(_win32)	this->running=CreateThread(0,0,(LPTHREAD_START_ROUTINE)windows_helper_function,this,0,&this->thread);
+#elif defined(_win32)
+	this->running=CreateThread(0,0,(LPTHREAD_START_ROUTINE)windows_helper_function,this,0,&this->thread);
 #endif
 	return this->isRunning();
 }
@@ -48,8 +68,13 @@ bool Thread::stop(void)
 		return false;
 	}
 	else
-	{		bool ok=true;#if defined(_linux)
-		ok=!pthread_kill(this->thread,SIGQUIT);#elif defined(_win32)		ExitThread(this->thread);#endif
+	{
+		bool ok=true;
+#if defined(_linux)
+		ok=!pthread_kill(this->thread,SIGQUIT);
+#elif defined(_win32)
+		ExitThread(this->thread);
+#endif
 		if(ok)
 		{
 			this->running=false;
@@ -66,7 +91,15 @@ bool Thread::join(void)
 	}
 	else
 	{
-		bool ok=true;#if defined(_linux)		ok=!pthread_join(this->thread,NULL);#elif defined(_win32)		while(this->isRunning())		{			Sleep(1);		}#endif
+		bool ok=true;
+#if defined(_linux)
+		ok=!pthread_join(this->thread,NULL);
+#elif defined(_win32)
+		while(this->isRunning())
+		{
+			Sleep(1);
+		}
+#endif
 		if(ok)
 		{
 			this->running=false;
