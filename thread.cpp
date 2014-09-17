@@ -18,13 +18,19 @@
 
 using namespace cppbenaryorg;
 
-#ifdef _win32
-DWORD *windows_helper_function(LPVOID arg)
+#if defined(_win32)
+DWORD *helper_function(LPVOID arg)
 {
 	Thread *thread=reinterpret_cast<Thread *>(arg);
 	return (DWORD *)thread->call();
 }
-#endif /**_win32**/
+#elif defined(_linux)
+void *helper_function(void *arg)
+{
+	Thread *thread=reinterpret_cast<Thread *>(arg);
+	return thread->call();
+}
+#endif
 
 Thread::Thread(void *(*f)(void *),void *arg)
 {
@@ -54,9 +60,9 @@ bool Thread::start(void)
 		return false;
 	}
 #if defined(_linux)
-	this->running=!pthread_create(&this->thread,NULL,this->getFunction(),this->getArgument());
+	this->running=!pthread_create(&this->thread,NULL,helper_function,this);
 #elif defined(_win32)
-	HANDLE h=CreateThread(0,0,(LPTHREAD_START_ROUTINE)windows_helper_function,this,0,&this->thread);
+	HANDLE h=CreateThread(0,0,(LPTHREAD_START_ROUTINE)helper_function,this,0,&this->thread);
 	this->running=!!h;
 	this->thread=(unsigned int)h;
 #endif
