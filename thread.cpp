@@ -57,7 +57,7 @@ bool Thread::start(void)
 	this->running=!pthread_create(&this->thread,NULL,this->getFunction(),this->getArgument());
 #elif defined(_win32)
 	HANDLE h=CreateThread(0,0,(LPTHREAD_START_ROUTINE)windows_helper_function,this,0,&this->thread);
-	this->running=!h;
+	this->running=!!h;
 	this->thread=(unsigned int)h;
 #endif
 	return this->isRunning();
