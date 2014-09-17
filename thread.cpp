@@ -102,10 +102,7 @@ bool Thread::join(void)
 			Sleep(1);
 		}
 #endif
-		if(ok)
-		{
-			this->running=false;
-		}
+		this->running=!ok;
 		return ok;
 	}
 }
