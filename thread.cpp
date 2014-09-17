@@ -19,7 +19,7 @@
 using namespace cppbenaryorg;
 
 #ifdef _win32
-DWORD WINAPI *windows_helper_function(LPVOID arg)
+DWORD *windows_helper_function(LPVOID arg)
 {
 	Thread *thread=reinterpret_cast<Thread *>(arg);
 	return (DWORD *)thread->call();
