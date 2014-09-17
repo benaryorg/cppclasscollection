@@ -75,7 +75,7 @@ bool Thread::stop(void)
 #if defined(_linux)
 		ok=!pthread_kill(this->thread,SIGQUIT);
 #elif defined(_win32)
-		TerminateThread(this->thread,0);
+		TerminateThread((HANDLE)this->thread,0);
 #endif
 		if(ok)
 		{
