@@ -1,8 +1,8 @@
 #include "thread.h"
 
-#if defined(linux)||defined(__linux)||defined(__linux__)
+#if (defined(linux)||defined(__linux)||defined(__linux__))&&!defined(_linux)
 #define _linux
-#elif defined(WIN32)||defined(_WIN32)||defined(__WIN32)||defined(__WIN32__)
+#elif (defined(WIN32)||defined(_WIN32)||defined(__WIN32)||defined(__WIN32__))&&!defined(_win32)
 #define _win32
 #endif
 
@@ -37,7 +37,7 @@ Thread::Thread(void *(*f)(void *),void *arg)
 void *Thread::call(void)
 {
 	void *ret=0;
-	if(this->getFunction()&&!this->isRunning())
+	if(this->getFunction())
 	{
 		this->running=true;
 		ret=this->getFunction()(this->getArgument());
@@ -56,7 +56,8 @@ bool Thread::start(void)
 #if defined(_linux)
 	this->running=!pthread_create(&this->thread,NULL,this->getFunction(),this->getArgument());
 #elif defined(_win32)
-	this->running=CreateThread(0,0,(LPTHREAD_START_ROUTINE)windows_helper_function,this,0,&this->thread);
+	CreateThread(0,0,(LPTHREAD_START_ROUTINE)windows_helper_function,this,0,&this->thread);
+	this->running=true;
 #endif
 	return this->isRunning();
 }
