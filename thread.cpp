@@ -83,11 +83,7 @@ bool Thread::stop(void)
 #elif defined(_win32)
 		TerminateThread((HANDLE)this->thread,0);
 #endif
-		if(ok)
-		{
-			this->running=false;
-		}
-		return ok;
+		this->running=!ok;
 	}
 }
 
