@@ -36,15 +36,15 @@ Thread::Thread(void *(*f)(void *),void *arg)
 
 void *Thread::call(void)
 {
+	void *ret=0;
 	if(this->getFunction()&&!this->isRunning())
 	{
-		return this->getFunction()(this->getArgument());
+		this->running=true;
+		ret=this->getFunction()(this->getArgument());
 	}
-	else
-	{
-		this->running=false;
-		return 0;
-	}
+	this->running=false;
+
+	return ret;
 }
 
 bool Thread::start(void)
