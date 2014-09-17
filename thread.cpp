@@ -43,12 +43,12 @@ Thread::Thread(void *(*f)(void *),void *arg)
 void *Thread::call(void)
 {
 	void *ret=0;
-	if(this->getFunction())
+	if(this->getFunction()&&!this->isRunning())
 	{
 		this->running=true;
 		ret=this->getFunction()(this->getArgument());
+		this->running=false;
 	}
-	this->running=false;
 
 	return ret;
 }
@@ -59,14 +59,15 @@ bool Thread::start(void)
 	{
 		return false;
 	}
+	bool ok=false;
 #if defined(_linux)
-	this->running=!pthread_create(&this->thread,NULL,helper_function,this);
+	ok=!pthread_create(&this->thread,NULL,helper_function,this);
 #elif defined(_win32)
 	HANDLE h=CreateThread(0,0,(LPTHREAD_START_ROUTINE)helper_function,this,0,&this->thread);
-	this->running=!!h;
 	this->thread=(unsigned int)h;
+	ok=!!h;
 #endif
-	return this->isRunning();
+	return ok;
 }
 
 bool Thread::stop(void)
