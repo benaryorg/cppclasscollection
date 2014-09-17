@@ -4,7 +4,7 @@ project (LIBCPPBENARYORG)
 
 file(GLOB_RECURSE files ${LIBCPPBENARYORG_SOURCE_DIR}/*.cpp) 
 
-add_library ( cppbenaryorg SHARED ${files} ) 
+add_library ( cppbenaryorg STATIC ${files} ) 
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	add_definitions(-D__WIN32__)
