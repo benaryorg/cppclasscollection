@@ -132,7 +132,7 @@ bool Thread::isRunning(void)
 	return this->running;
 }
 
-unsigned long int Thread::getPThread(void)
+unsigned long int Thread::getThreadId(void)
 {
 	return this->thread;
 }

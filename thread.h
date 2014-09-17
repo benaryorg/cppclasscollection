@@ -21,7 +21,7 @@ public:
 
 	virtual bool isRunning(void);
 
-	virtual unsigned long int getPThread(void);
+	virtual unsigned long int getThreadId(void);
 
 private:
 	bool running;
