@@ -8,20 +8,20 @@ class Thread
 {
 public:
 	Thread(void *(*function)(void *)=0,void *argument=0);
-	void *call(void);
-	bool start(void);
-	bool stop(void);
-	bool join(void);
+	virtual void *call(void);
+	virtual bool start(void);
+	virtual bool stop(void);
+	virtual bool join(void);
 
-	void *(*getFunction(void))(void *);
-	void setFunction(void *(*function)(void *));
+	virtual void *(*getFunction(void))(void *);
+	virtual void setFunction(void *(*function)(void *));
 
-	void *getArgument(void);
-	void setArgument(void *argument);
+	virtual void *getArgument(void);
+	virtual void setArgument(void *argument);
 
-	bool isRunning(void);
+	virtual bool isRunning(void);
 
-	unsigned long int getPThread(void);
+	virtual unsigned long int getPThread(void);
 
 private:
 	bool running;
