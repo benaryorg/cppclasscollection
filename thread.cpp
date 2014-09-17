@@ -22,13 +22,17 @@ using namespace cppbenaryorg;
 DWORD *helper_function(LPVOID arg)
 {
 	Thread *thread=reinterpret_cast<Thread *>(arg);
-	return (DWORD *)thread->call();
+	thread->call();
+	ExitThread(0);
+	return 0;
 }
 #elif defined(_linux)
 void *helper_function(void *arg)
 {
 	Thread *thread=reinterpret_cast<Thread *>(arg);
-	return thread->call();
+	thread->call();
+	pthread_exit(0);
+	return 0;
 }
 #endif
 
