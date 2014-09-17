@@ -56,8 +56,9 @@ bool Thread::start(void)
 #if defined(_linux)
 	this->running=!pthread_create(&this->thread,NULL,this->getFunction(),this->getArgument());
 #elif defined(_win32)
-	CreateThread(0,0,(LPTHREAD_START_ROUTINE)windows_helper_function,this,0,&this->thread);
-	this->running=true;
+	HANDLE h=CreateThread(0,0,(LPTHREAD_START_ROUTINE)windows_helper_function,this,0,&this->thread);
+	this->running=!h;
+	this->thread=(unsigned int)h;
 #endif
 	return this->isRunning();
 }
@@ -74,7 +75,7 @@ bool Thread::stop(void)
 #if defined(_linux)
 		ok=!pthread_kill(this->thread,SIGQUIT);
 #elif defined(_win32)
-		ExitThread(this->thread);
+		TerminateThread(this->thread,0);
 #endif
 		if(ok)
 		{
