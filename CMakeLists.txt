@@ -18,3 +18,4 @@ INSTALL(TARGETS cppbenaryorg
 	LIBRARY DESTINATION /usr/lib
 	ARCHIVE DESTINATION /usr/lib
 )
+
