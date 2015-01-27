@@ -9,7 +9,7 @@
 
 #if defined(_linux)
 #include <pthread.h>
-#include <signal.h>
+#include <csignal>
 #elif defined(_win32)
 #include <windows.h>
 #else
@@ -47,7 +47,7 @@ Thread::Thread(void *(*f)(void *),void *arg)
 void *Thread::call(void)
 {
 	void *ret=0;
-	if(this->getFunction()&&!this->isRunning())
+	if(this->getFunction())//&&!this->isRunning())
 	{
 		this->running=true;
 		ret=this->getFunction()(this->getArgument());
@@ -71,6 +71,7 @@ bool Thread::start(void)
 	this->thread=(unsigned int)h;
 	ok=!!h;
 #endif
+	this->running=ok;
 	return ok;
 }
 
@@ -109,6 +110,7 @@ bool Thread::join(void)
 			Sleep(1);
 		}
 #endif
+
 		this->running=!ok;
 		return ok;
 	}

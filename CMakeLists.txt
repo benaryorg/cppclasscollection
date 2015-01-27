@@ -1,21 +1,23 @@
-cmake_minimum_required (VERSION 2.4)
+cmake_minimum_required(VERSION 2.4)
 
-project (LIBCPPBENARYORG)
+project(LIBCPPBENARYORG)
 
-file(GLOB_RECURSE files ${LIBCPPBENARYORG_SOURCE_DIR}/*.cpp) 
+file(GLOB headers ${LIBCPPBENARYORG_SOURCE_DIR}/*.h)
+file(GLOB files ${LIBCPPBENARYORG_SOURCE_DIR}/*.cpp)
 
-add_library ( cppbenaryorg STATIC ${files} ) 
+add_library(cppbenaryorg SHARED ${files})
 
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+if(MSVC)
 	add_definitions(-D__WIN32__)
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-	target_link_libraries ( cppbenaryorg pthread )
+elseif(UNIX)
+	target_link_libraries(cppbenaryorg pthread)
 	add_definitions(-D__linux__)
 endif()
 
 INSTALL(TARGETS cppbenaryorg
-	RUNTIME DESTINATION /usr/bin
-	LIBRARY DESTINATION /usr/lib
-	ARCHIVE DESTINATION /usr/lib
+	RUNTIME DESTINATION bin
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib
 )
 
+INSTALL(FILES ${headers} DESTINATION include/cppbenaryorg)
